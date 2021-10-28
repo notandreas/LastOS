@@ -4,11 +4,11 @@
 #define GPF_BITS 3
 
 typedef struct _gpio_registers {
-	unsigned int func[6];
-	unsigned int reserved0;
-	unsigned int set[2];
-	unsigned int reserved1;
-	unsigned int clr[2];
+    unsigned int func[6];
+    unsigned int reserved0;
+    unsigned int set[2];
+    unsigned int reserved1;
+    unsigned int clr[2];
     unsigned int reserved2;
     unsigned int lev[2];
     unsigned int reserved3;
