@@ -5,30 +5,30 @@
 #define GPF_BITS 3
 
 typedef struct _gpio_registers {
-    uint32_t func[6];
+    uint32_t func[6];       //GPIO Function Select Registers
     uint32_t reserved0;
-    uint32_t set[2];
+    uint32_t set[2];        //GPIO Output Set Registers
     uint32_t reserved1;
-    uint32_t clr[2];
+    uint32_t clr[2];        //GPIO Output Clear Registers
     uint32_t reserved2;
-    uint32_t lev[2];
+    uint32_t lev[2];        //GPIO PIN Level Registers (High/Low)
     uint32_t reserved3;
-    uint32_t eds[2];
+    uint32_t eds[2];        //GPIO Event Detect Status Registers
     uint32_t reserved4;
-    uint32_t ren[2];
+    uint32_t ren[2];        //GPIO Rising Edge Detect Enable Registers
     uint32_t reserved5;
-    uint32_t fan[2];
+    uint32_t fen[2];        //GPIO Falling Edge Detect Enable Registers
     uint32_t reserved6;
-    uint32_t hen[2];
+    uint32_t hen[2];        //GPIO High Detect Enable Registers
     uint32_t reserved7;
-    uint32_t len[2];
+    uint32_t len[2];        //GPIO Low Detect Enable Registers
     uint32_t reserved8;
-    uint32_t aren[2];
+    uint32_t aren[2];       //GPIO Asynchronous rising Edge Detect Enable Registers
     uint32_t reserved9;
-    uint32_t afen[2];
+    uint32_t afen[2];       //GPIO Asynchronous Falling Edge Detect Enable Registers
     uint32_t reserved10;
-    uint32_t pud;
-    uint32_t pudclk[2];
+    uint32_t pud;           //GPIO Pull-up/down Register
+    uint32_t pudclk[2];     //GPIO Pull-up/down Clock Registers
     uint32_t reserved11;
     uint32_t reserved12;
 } gpio;
