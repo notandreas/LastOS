@@ -1,35 +1,36 @@
 #include <arch/bsp/gpio.h>
+#include <stdint.h>
 
 #define GPIO_BASE (0x7E200000 - 0x3F000000)
 #define GPF_BITS 3
 
 typedef struct _gpio_registers {
-    unsigned int func[6];
-    unsigned int reserved0;
-    unsigned int set[2];
-    unsigned int reserved1;
-    unsigned int clr[2];
-    unsigned int reserved2;
-    unsigned int lev[2];
-    unsigned int reserved3;
-    unsigned int eds[2];
-    unsigned int reserved4;
-    unsigned int ren[2];
-    unsigned int reserved5;
-    unsigned int fen[2];
-    unsigned int reserved6;
-    unsigned int hen[2];
-    unsigned int reserved7;
-    unsigned int len[2];
-    unsigned int reserved8;
-    unsigned int aren[2];
-    unsigned int reserved9;
-    unsigned int afen[2];
-    unsigned int reserved10;
-    unsigned int pud;
-    unsigned int pudclk[2];
-    unsigned int reserved11;
-    unsigned int reserved12;
+    uint32_t func[6];
+    uint32_t reserved0;
+    uint32_t set[2];
+    uint32_t reserved1;
+    uint32_t clr[2];
+    uint32_t reserved2;
+    uint32_t lev[2];
+    uint32_t reserved3;
+    uint32_t eds[2];
+    uint32_t reserved4;
+    uint32_t ren[2];
+    uint32_t reserved5;
+    uint32_t fan[2];
+    uint32_t reserved6;
+    uint32_t hen[2];
+    uint32_t reserved7;
+    uint32_t len[2];
+    uint32_t reserved8;
+    uint32_t aren[2];
+    uint32_t reserved9;
+    uint32_t afen[2];
+    uint32_t reserved10;
+    uint32_t pud;
+    uint32_t pudclk[2];
+    uint32_t reserved11;
+    uint32_t reserved12;
 } gpio;
 
 static volatile gpio * const gpio_registers = (gpio *) GPIO_BASE;
