@@ -16,7 +16,7 @@ typedef struct _gpio_registers {
     unsigned int reserved4;
     unsigned int ren[2];
     unsigned int reserved5;
-    unsigned int fan[2];
+    unsigned int fen[2];
     unsigned int reserved6;
     unsigned int hen[2];
     unsigned int reserved7;
@@ -56,5 +56,15 @@ void gpio_set_pin_func(int pin, gpio_func func) {
             break;
         default:
             break;
+    }
+}
+
+void gpio_set_up_down(int pin, gpio_up_down up_down) {
+    gpio_registers->pud = up_down;
+    if (0 <= pin && pin <= 31) {
+        gpio_registers->pudclk[0] = 1 << pin;
+    }
+    else if (32 <= pin && pin <= 53) {
+        gpio_registers->pudclk[1] = 1 << (pin % 32);
     }
 }
