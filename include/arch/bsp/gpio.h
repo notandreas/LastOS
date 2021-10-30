@@ -5,8 +5,8 @@
  * Defines all GPIO functions for the FSELn of the GPFSELm.
 */
 typedef enum _gpio_func {
-	GPIO_FUNC_INPUT = 0x000,
-	GPIO_FUNC_OUTPUT = 0x001,
+    GPIO_FUNC_INPUT = 0x000,
+    GPIO_FUNC_OUTPUT = 0x001,
     GPIO_FUNC_ALT0 = 0x100,
     GPIO_FUNC_ALT1 = 0x101,
     GPIO_FUNC_ALT2 = 0x110,
