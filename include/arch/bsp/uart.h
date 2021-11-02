@@ -14,4 +14,6 @@ void uart_disable();
 
 void uart_put_c(char character);
 
+char uart_get_c();
+
 #endif

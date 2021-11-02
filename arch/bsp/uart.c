@@ -59,3 +59,8 @@ void uart_put_c(char character) {
     while ((uart_registers->fr) & (1 << 5)) {}
     uart_registers->dr = (character);
 }
+
+char uart_get_c() {
+    while ((uart_registers->fr) & (1 << 4)) {}
+    return uart_registers->dr;
+}

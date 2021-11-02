@@ -1,11 +1,5 @@
-#include <arch/bsp/yellow_led.h>
+#include <arch/bsp/uart.h>
 #include <lib/kprintf.h>
-
-volatile unsigned int counter = 0;
-
-void increment_counter() {
-	counter++;
-}
 
 
 void start_kernel(){
@@ -17,10 +11,11 @@ void start_kernel(){
 	kprintf("Int: %i\n", -2147483648);
 	kprintf("UInt: %u\n", 4294967295);
 	kprintf("Pointer: %p\n", test);
-	kprintf("%%");
+	kprintf("%%\n");
 
 	// Endless counter
 	for (;;) {
-		increment_counter();
+		char a = uart_get_c();
+		kprintf("Es wurde folgender Charakter eingegeben: %c, In Hexadezimal: %x, In Dezimal: %u\n", a, a, a);
 	}
 }
