@@ -17,7 +17,7 @@
  */
 
 /* Include-Pfad bitte gegenfalls anpassen */
-#include <kernel/kprintf.h>
+#include <lib/kprintf.h>
 static inline void test_kprintf(void) {
 	/* Nur für Aufgabenblatt 1
 	 * Hier Test Funktion für kprintf schreiben und
