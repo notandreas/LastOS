@@ -1,5 +1,6 @@
-#include <arch/bsp/gpio.h>
 #include <stdint.h>
+
+#include <arch/bsp/gpio.h>
 
 #define GPIO_BASE (0x7E200000 - 0x3F000000)
 #define GPF_BITS 3

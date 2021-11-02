@@ -8,4 +8,10 @@
 */
 void init_uart();
 
+void uart_enable();
+
+void uart_disable();
+
+void uart_put_c(char character);
+
 #endif

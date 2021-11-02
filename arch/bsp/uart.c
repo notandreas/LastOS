@@ -1,6 +1,7 @@
+#include <stdint.h>
+
 #include <arch/bsp/uart.h>
 #include <arch/bsp/gpio.h>
-#include <stdint.h>
 
 #define UART_BASE (0x7E201000 - 0x3F000000)
 
@@ -44,4 +45,17 @@ void init_uart() {
     uart_registers->imsc = (1 << 1) | (1 << 4) | (1 << 5) | (1 << 6) | (1 << 7) | (1 << 8) | (1 << 8) | (1 << 10);
     uart_registers->lcrh |= (1 << 4) | (0x11 << 5); 
     uart_registers->cr = 1 | (1 << 8) | (1 << 9);
+}
+
+void uart_enable() {
+    uart_registers->cr = 1 | (1 << 8) | (1 << 9);
+}
+
+void uart_disable() {
+    uart_registers->cr = 0;
+}
+
+void uart_put_c(char character) {
+    while ((uart_registers->fr) & (1 << 5)) {}
+    uart_registers->dr = (character);
 }
