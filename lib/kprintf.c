@@ -1,15 +1,20 @@
 #include <stdarg.h>
 
+#include <kernel/panic.h>
+
 #include <lib/kprintf.h>
 #include <arch/bsp/uart.h>
 
+__attribute__((format(printf, 1, 2)))
 void kprintf(char* fmt_str, ...) {
     va_list arg_ptr;
     va_start(arg_ptr, fmt_str);
 
+    // Flags
     bool field_flag = false;
     bool zeros_flag = false;
 
+    // Variables to handle input.
     char print_num_str[12];
     unsigned char print_c;
     char* print_str;
@@ -19,7 +24,10 @@ void kprintf(char* fmt_str, ...) {
         field_flag = false;
         zeros_flag = false;
 
+        // If is a Formatter.
         if (*fmt_str == '%') {
+
+            // Test next char for a 0 or 8 Flag.
             fmt_str++;
             if (*(fmt_str) == '0') {
                 zeros_flag = true;
@@ -30,10 +38,12 @@ void kprintf(char* fmt_str, ...) {
                 fmt_str++;
             }
 
+            // If 0 padding is used but has no padding.
             if (zeros_flag && !field_flag) {
-                return;
+                panic("Use of %%0 without padding and a flag!");
             }
 
+            // Check the formatting flag.
             switch (*(fmt_str)) {
                 case 'c':
                     print_c = va_arg(arg_ptr, int);
@@ -59,7 +69,7 @@ void kprintf(char* fmt_str, ...) {
                     kprintf_int(print_num_str, false, field_flag, zeros_flag);
                     break;
                 case 'p':
-                    number = va_arg(arg_ptr, void*);
+                    number = (int) va_arg(arg_ptr, void*);
                     itoa(number, 16, false, print_num_str);
                     print_num_str[11] += 2;
                     kprintf_int(print_num_str, true, field_flag, zeros_flag);
@@ -68,6 +78,7 @@ void kprintf(char* fmt_str, ...) {
                     uart_put_c('%');
                     break;
                 default:
+                    panic("No flags after %%!");
                     break;
             }
         }
@@ -75,6 +86,7 @@ void kprintf(char* fmt_str, ...) {
            uart_put_c(*fmt_str);
         }
 
+        // If no formatter is used JUST PRINT.
         fmt_str++; 
     }
 
@@ -82,10 +94,12 @@ void kprintf(char* fmt_str, ...) {
 }
 
 void itoa(int num, int base, bool signed_num, char* nums) {
+    // clear String
     for (int i = 0; i < 11; i++) {
 		nums[i] = '\0';
 	}
 
+    // to count number spaces.
     nums[11] = 0;
     int count = 10;
  
@@ -95,12 +109,14 @@ void itoa(int num, int base, bool signed_num, char* nums) {
         return;
     }
  
+    // add a minus if required.
     if (signed_num && num < 0 && base == 10) {
         num = -num;
         nums[0] = '-';
         nums[11]++;
     }
- 
+
+    // convert number to decimal/hex.
     unsigned int p_num = num;
 
     while (p_num != 0) {
@@ -115,10 +131,13 @@ void itoa(int num, int base, bool signed_num, char* nums) {
 void kprintf_int(char* nums, bool hex_prefix, bool field_flag, bool zeros_flag) {
     int n = 0;
 
+    // calculate and print padding.
     if (field_flag) {
+        // calculate padding.
         int padding = 8 - nums[11];
         padding = padding < 0 ? 0 : padding;
 
+        // print minus in right place
         if (zeros_flag && nums[0] == '-') {
             uart_put_c('-');
             n++;
@@ -127,6 +146,7 @@ void kprintf_int(char* nums, bool hex_prefix, bool field_flag, bool zeros_flag) 
         if (hex_prefix && zeros_flag)
             kprintf("0x");
 
+        // print padding.
         for (int i = 0; i < padding; i++) {
             if (zeros_flag) {
                 uart_put_c('0');
@@ -139,6 +159,10 @@ void kprintf_int(char* nums, bool hex_prefix, bool field_flag, bool zeros_flag) 
             kprintf("0x");
     }
 
+    if (hex_prefix && !field_flag)
+            kprintf("0x");
+
+    // print number.
     for (; n < 11; n++) {
         if (nums[n] != '\0')
             uart_put_c(nums[n]);

@@ -1,5 +1,7 @@
 #include <stdint.h>
 
+#include <kernel/panic.h>
+
 #include <arch/bsp/gpio.h>
 
 #define GPIO_BASE (0x7E200000 - 0x3F000000)
@@ -58,6 +60,7 @@ void gpio_set_pin_func(int pin, gpio_func func) {
             gpio_registers->func[5] |= func << GPF_BITS * (pin % 10);
             break;
         default:
+            panic("Trying to set pin function for a non existing pin!");
             break;
     }
 }

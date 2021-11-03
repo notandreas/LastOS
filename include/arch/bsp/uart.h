@@ -8,12 +8,24 @@
 */
 void init_uart();
 
+/**
+ * Enable UART and only TXE and RXE;
+*/
 void uart_enable();
 
+/**
+ * Disable UART.
+*/
 void uart_disable();
 
+/**
+ * Send a Char to the Terminal.
+*/
 void uart_put_c(char character);
 
+/**
+ * Get a Char from the Terminal.
+*/
 char uart_get_c();
 
 #endif

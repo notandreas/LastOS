@@ -42,7 +42,7 @@ static inline void test_kprintf(void) {
 	kprintf("Test: %08u\n", 123);
 	kprintf("Test: %08i\n", -12345);
 	kprintf("Test: %08p\n", 0xff);
-	kprintf("\n");
+	kprintf("\nRUST 🦀\n\n");
 }
 
 /**
