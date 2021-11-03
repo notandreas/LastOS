@@ -24,6 +24,25 @@ static inline void test_kprintf(void) {
 	 * nach dem vollständigen initialisieren aufrufen
 	 */
 	kprintf("kprintf_test\n");
+
+	kprintf("\n");
+	kprintf("Char: %c\n", 65);
+	char* test = "Hello World";
+	kprintf("String: %s\n", test);
+	kprintf("Hex: %x\n", 1334);
+	kprintf("Int: %i\n", 0x80000000); //-2147483648
+	kprintf("UInt: %u\n", 0xffffffff); //4294967295
+	kprintf("Pointer: %p\n", test);
+	kprintf("Percent: %%\n");
+	kprintf("\n");
+	kprintf("Test: %8u\n", 123);
+	kprintf("Test: %8i\n", -12345);
+	kprintf("Test: %8p\n", 0xff);
+	kprintf("\n");
+	kprintf("Test: %08u\n", 123);
+	kprintf("Test: %08i\n", -12345);
+	kprintf("Test: %08p\n", 0xff);
+	kprintf("\n");
 }
 
 /**
