@@ -1,14 +1,9 @@
-#include <stdarg.h>
-
 #include <kernel/panic.h>
 
 #include <lib/kprintf.h>
 #include <arch/bsp/uart.h>
 
-__attribute__((format(printf, 1, 2)))
-void kprintf(char* fmt_str, ...) {
-    va_list arg_ptr;
-    va_start(arg_ptr, fmt_str);
+void va_printf(char* fmt_str, va_list arg_ptr) {
 
     // Flags
     bool field_flag = false;
@@ -47,14 +42,14 @@ void kprintf(char* fmt_str, ...) {
             switch (*(fmt_str)) {
                 case 'c':
                     if (field_flag)
-                        panic("Can't use %%8 or %%08 with the c flag");
+                        panic("Can't use %%8 or %%08 with the c flag!");
 
                     print_c = va_arg(arg_ptr, int);
                     uart_put_c(print_c);
                     break;
                 case 's':
                     if (field_flag)
-                        panic("Can't use %%8 or %%08 with the s flag");
+                        panic("Can't use %%8 or %%08 with the s flag!");
 
                     print_str = va_arg(arg_ptr, char*);
                     kprintf(print_str);
@@ -76,7 +71,7 @@ void kprintf(char* fmt_str, ...) {
                     break;
                 case 'p':
                     if (zeros_flag)
-                        panic("Can't use %%08 with the p flag");
+                        panic("Can't use %%08 with the p flag!");
 
                     number = (int) va_arg(arg_ptr, void*);
                     itoa(number, 16, false, print_num_str);
@@ -98,6 +93,13 @@ void kprintf(char* fmt_str, ...) {
         // If no formatter is used JUST PRINT.
         fmt_str++; 
     }
+}
+
+void kprintf(char* fmt_str, ...) {
+    va_list arg_ptr;
+    va_start(arg_ptr, fmt_str);
+
+    va_printf(fmt_str, arg_ptr);
 
     va_end(arg_ptr);
 }

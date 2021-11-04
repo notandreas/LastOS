@@ -2,11 +2,17 @@
 #define KPRINTF_H
 
 #include <stdbool.h>
+#include <stdarg.h>
 
 /**
- * Print a string with formatter.
+ * Logic to print a string with a formatter.
 */
-void kprintf(char* fmt_str, ...);
+void va_printf(char* fmt_str, va_list arg_ptr);
+
+/**
+ * Call the va_printf(); and hanle warnings.
+*/
+void kprintf(char* fmt_str, ...) __attribute__((format(printf, 1, 2)));
 
 /**
  * Convert an int to a String.
