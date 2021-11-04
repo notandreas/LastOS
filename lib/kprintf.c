@@ -46,10 +46,16 @@ void kprintf(char* fmt_str, ...) {
             // Check the formatting flag.
             switch (*(fmt_str)) {
                 case 'c':
+                    if (field_flag)
+                        panic("Can't use %%8 or %%08 with the c flag");
+
                     print_c = va_arg(arg_ptr, int);
                     uart_put_c(print_c);
                     break;
                 case 's':
+                    if (field_flag)
+                        panic("Can't use %%8 or %%08 with the s flag");
+
                     print_str = va_arg(arg_ptr, char*);
                     kprintf(print_str);
                     break;
@@ -69,6 +75,9 @@ void kprintf(char* fmt_str, ...) {
                     kprintf_int(print_num_str, false, field_flag, zeros_flag);
                     break;
                 case 'p':
+                    if (zeros_flag)
+                        panic("Can't use %%08 with the p flag");
+
                     number = (int) va_arg(arg_ptr, void*);
                     itoa(number, 16, false, print_num_str);
                     print_num_str[11] += 2;
