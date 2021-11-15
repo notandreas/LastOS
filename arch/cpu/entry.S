@@ -34,6 +34,9 @@ _enableAlignCheck:
 
 
 _bsprak:
+	/* Set IVT in VBAR */
+	ldr r0, =_ivt
+	mcr p15, 0, r0, c12, c0, 0
 	/* Validen Stack Pointer setzten */
 	ldr sp,=0x20000
 	/* Zu c Code springen */

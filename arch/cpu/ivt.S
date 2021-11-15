@@ -1,6 +1,6 @@
 .section .ivt
 .global _ivt
-.baligne 32
+.balign 32
 
 _ivt:
     b reset
@@ -19,3 +19,24 @@ _data_abort:                .word data_abort
 _not_used:                  .word not_used
 _irq:                       .word irq
 _fiq:                       .word fiq
+
+undefined_instruction:
+    subs pc, lr, #4
+
+software_interrupt:
+    subs pc, lr, #4
+
+prefetch_abort:
+    subs pc, lr, #4
+
+data_abort:
+    subs pc, lr, #8
+
+irq:
+    subs pc, lr, #8
+
+fiq:
+    subs pc, lr, #8
+
+reset:
+not_used:
