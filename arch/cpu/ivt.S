@@ -68,7 +68,6 @@
     sub sp, sp, #4
 .endm
 
-.section .ivt
 .global _ivt
 .balign 32
 
@@ -93,51 +92,25 @@ _fiq:                       .word fiq
 reset:
 
 undefined_instruction:
-    save_all
-    save_svc
-    save_abt
-    save_irq
-    save_fiq
     subs pc, lr, #4
 
 software_interrupt:
-    save_all
-    save_und
-    save_abt
-    save_irq
-    save_fiq
     subs pc, lr, #4
 
 prefetch_abort:
-    save_all
-    save_und
-    save_svc
-    save_irq
-    save_fiq
+    sub sp, sp, #4
+    bl irq_interrupt
+    ldr lr, [sp]
+    add sp, sp, #4
     subs pc, lr, #4
 
 data_abort:
-    save_all
-    save_und
-    save_svc
-    save_irq
-    save_fiq
     subs pc, lr, #8
 
 irq:
-    ;save_all
-    ;save_und
-    ;save_svc
-    ;save_abt
-    ;save_fiq
     subs pc, lr, #8
 
 fiq:
-    save_all
-    save_und
-    save_svc
-    save_abt
-    save_irq
     subs pc, lr, #8
 
 not_used:

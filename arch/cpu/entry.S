@@ -39,6 +39,7 @@ _bsprak:
 	mcr p15, 0, r0, c12, c0, 0
 	/* Validen Stack Pointer setzten */
 	ldr sp,=0x20000
+	bkpt
 	/* Zu c Code springen */
 	bl  start_kernel
 .Lend:
