@@ -8,6 +8,14 @@
     sub sp, sp, #4
 .endm
 
+.macro load_all
+    ldr r0, [sp, #4]
+    add sp, sp, #4
+    mrs cpsr_cxsf, r0
+
+    ldmfd sp!, {r0-r12, lr, pc}
+.endm
+
 .macro save_und
     mrs r0, sp_und
     str r0, [sp, #-4]

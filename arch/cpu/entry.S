@@ -38,8 +38,30 @@ _bsprak:
 	ldr r0, =_ivt
 	mcr p15, 0, r0, c12, c0, 0
 	/* Validen Stack Pointer setzten */
-	ldr sp,=0x20000
-	bkpt
+    @ldr sp,=0x00320000
+
+	mrs r0, CPSR           @ save cpsr
+
+	cps 0x1f               @ swap to sys
+	ldr sp, = 0x00320000   @ sys and usr sp
+	cps 0x11               @ swap to fiq
+	ldr sp, =0x00166000    @ fiq sp
+	cps 0x12               @ swap to irq
+	ldr sp, =0x00165000    @ irq sp
+	cps 0x17               @ swap to abt
+	ldr sp, =0x00164000    @ abt sp
+	cps 0x1b               @ swap to undef
+	ldr sp, =0x00163000    @ undef sp
+	cps 0x13               @ swap to svc
+	ldr sp, =0x00162000    @ svc sp
+
+
+	msr cpsr_cxsf, r0      @ load cpsr again
+
+    @@@@ möglicher bug mit zum ende hin zum usr switchen!!!
+
+	bkpt #0
+
 	/* Zu c Code springen */
 	bl  start_kernel
 .Lend:
