@@ -1,19 +1,20 @@
-.macro save_all
-    str sp, [sp, #-4]
-    sub sp, sp, #4
-    stmfd sp!, {r0-r12, lr, pc}
+.macro store_all
+    stmfd sp!, {r0-r12, sp, lr, pc}
+    mov r0, sp
 
-    mrs r0, cpsr
-    str r0, [sp, #-4]
-    sub sp, sp, #4
+    mrs r1, spsr
+    str r1, [sp, #-4]
+    mrs r1, cpsr
+    str r1, [sp, #-8]
+    sub sp, #8
+    mov r1, sp
 .endm
 
 .macro load_all
-    ldr r0, [sp, #4]
-    add sp, sp, #4
-    mrs cpsr_cxsf, r0
-
-    ldmfd sp!, {r0-r12, lr, pc}
+    add sp, sp, #8
+    ldmfd sp!, {r0-r12}
+    ldr lr, [sp, #4]
+    add sp, sp, #12
 .endm
 
 .macro save_und
@@ -81,21 +82,13 @@
 
 _ivt:
     b reset
-    ldr pc, _undefined_instruction
-    ldr pc, _software_interrupt
-    ldr pc, _prefetch_abort
-    ldr pc, _data_abort
-    ldr pc, _not_used
-    ldr pc, _irq
-    ldr pc, _fiq
-
-_undefined_instruction:     .word undefined_instruction
-_software_interrupt:        .word software_interrupt
-_prefetch_abort:            .word prefetch_abort
-_data_abort:                .word data_abort
-_not_used:                  .word not_used
-_irq:                       .word irq
-_fiq:                       .word fiq
+    ldr pc, =undefined_instruction
+    ldr pc, =software_interrupt
+    ldr pc, =prefetch_abort
+    ldr pc, =data_abort
+    ldr pc, =not_used
+    ldr pc, =irq
+    ldr pc, =fiq
 
 reset:
 
@@ -106,10 +99,9 @@ software_interrupt:
     subs pc, lr, #4
 
 prefetch_abort:
-    sub sp, sp, #4
-    bl irq_interrupt
-    ldr lr, [sp]
-    add sp, sp, #4
+    store_all
+    bl prefetch_abort_interrupt
+    load_all
     subs pc, lr, #4
 
 data_abort:

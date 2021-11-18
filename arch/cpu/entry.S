@@ -40,21 +40,20 @@ _bsprak:
 	/* Validen Stack Pointer setzten */
     @ldr sp,=0x00320000
 
-	mrs r0, CPSR           @ save cpsr
+	mrs r0, cpsr           @ save cpsr
 
 	cps 0x1f               @ swap to sys
-	ldr sp, = 0x00320000   @ sys and usr sp
+	ldr sp, =0x00015000    @ sys and usr sp
 	cps 0x11               @ swap to fiq
-	ldr sp, =0x00166000    @ fiq sp
+	ldr sp, =0x0000D000    @ fiq sp
 	cps 0x12               @ swap to irq
-	ldr sp, =0x00165000    @ irq sp
+	ldr sp, =0x0000C000    @ irq sp
 	cps 0x17               @ swap to abt
-	ldr sp, =0x00164000    @ abt sp
+	ldr sp, =0x0000B000    @ abt sp
 	cps 0x1b               @ swap to undef
-	ldr sp, =0x00163000    @ undef sp
+	ldr sp, =0x0000A000    @ undef sp
 	cps 0x13               @ swap to svc
-	ldr sp, =0x00162000    @ svc sp
-
+	ldr sp, =0x00009000    @ svc sp
 
 	msr cpsr_cxsf, r0      @ load cpsr again
 
