@@ -7,46 +7,46 @@
 
 // flag reg flags
 enum uart_fr {
-	RXFE = 1 << 0x4, 	// Receive FIFO empty
-	TXFF = 1 << 0x5, 	// Transmit FIFO full
+    RXFE = 1 << 0x4, 	// Receive FIFO empty
+    TXFF = 1 << 0x5, 	// Transmit FIFO full
 };
 
 // line control register flags
 enum uart_lcrh {
-	FEN = 1 << 0x4,    	// Enable FIFOs
-	WLEN = 0b11<< 0x5, 	// Word length
+    FEN = 1 << 0x4,    	// Enable FIFOs
+    WLEN = 0b11<< 0x5, 	// Word length
 };
 
 // control register flags
 enum uart_cr {
     DISABLE_UART = 0x0, // Disable UART
     ENABLE_UART = 0x1,  // Enable UART
-	TXE = 1<< 0x8, 	    // Transmit enable
-	RXE = 1<< 0x9, 	    // Receive enable
+    TXE = 1<< 0x8, 	    // Transmit enable
+    RXE = 1<< 0x9, 	    // Receive enable
 };
 
 // interrupt mask set/clear register flags
 enum uart_imsc {
-	CTSMIM = 1 << 0x1,  // nUARTCTS modem interrupt mask
-	RXIM = 1 << 0x4,    // Receive interrupt mask
+    CTSMIM = 1 << 0x1,  // nUARTCTS modem interrupt mask
+    RXIM = 1 << 0x4,    // Receive interrupt mask
     TXIM = 1 << 0x5,    // Transmit interrupt mask
-	RTIM = 1 << 0x6,    // Receive timeout interrupt mask
+    RTIM = 1 << 0x6,    // Receive timeout interrupt mask
     FEIM = 1 << 0x7,    // Framing error interrupt mask
-	PEIM = 1 << 0x8,    // Parity error interrupt mask
+    PEIM = 1 << 0x8,    // Parity error interrupt mask
     BEIM = 1 << 0x9,    // Break error interrupt mask
-	OEIM = 1 << 0x10,   // Overrun error interrupt mask
+    OEIM = 1 << 0x10,   // Overrun error interrupt mask
 };
 
 // interrupt control register flags
 enum uart_icr {
-	CTSMIC = 1 << 0x1, 	// nUARTCTS modem masked interrupt status
-	RXIC = 1 << 0x4, 	// Receive masked interrupt status
+    CTSMIC = 1 << 0x1, 	// nUARTCTS modem masked interrupt status
+    RXIC = 1 << 0x4, 	// Receive masked interrupt status
     TXIC = 1 << 0x5, 	// Transmit interrupt clear
-	RTIC = 1 << 0x6, 	// Receive timeout interrupt clear.
+    RTIC = 1 << 0x6, 	// Receive timeout interrupt clear.
     FEIC = 1 << 0x7, 	// Framing error interrupt clear
-	PEIC = 1 << 0x8, 	// Parity error interrupt clear
+    PEIC = 1 << 0x8, 	// Parity error interrupt clear
     BEIC = 1 << 0x9, 	// Break error interrupt clear
-	OEIC = 1 << 0x10,   // Overrun error interrupt clear
+    OEIC = 1 << 0x10,   // Overrun error interrupt clear
 };
 
 
