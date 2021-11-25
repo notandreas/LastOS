@@ -58,7 +58,6 @@ _bsprak:
     msr cpsr_cxsf, r0      @ load cpsr again
 
     @@@@ möglicher bug mit zum ende hin zum usr switchen!!!
-    ldr r0, [sp, #1]
 
     /* Zu c Code springen */
     bl  start_kernel

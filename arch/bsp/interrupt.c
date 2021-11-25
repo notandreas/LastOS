@@ -26,12 +26,12 @@ void prefetch_abort_interrupt(uint32_t reg[16], uint32_t psr[2], uint32_t mod_re
     kprintf("Prefetch Abort an Adresse: 0x%08x\n", (unsigned int) reg[14] - 4);
 
     uint32_t ifar_save;
-    asm("mrc p15, 0, %0, c6, c0, 2"
+    asm volatile ("mrc p15, 0, %0, c6, c0, 2"
       : "=r" (ifar_save)
     );
 
     uint32_t ifsr_save;
-    asm("mrc p15, 0, %0, c5, c0, 1"
+    asm volatile ("mrc p15, 0, %0, c5, c0, 1"
       : "=r" (ifsr_save)
     );
 
@@ -49,12 +49,12 @@ void data_abort_interrupt(uint32_t reg[16], uint32_t psr[2], uint32_t mod_reg[14
     kprintf("Data Abort an Adresse: 0x%08x\n", (unsigned int) reg[14] - 8);
 
     uint32_t dfar_save;
-    asm("mrc p15, 0, %0, c6, c0, 0"
+    asm volatile ("mrc p15, 0, %0, c6, c0, 0"
       : "=r" (dfar_save)
     );
 
     uint32_t dfsr_save;
-    asm("mrc p15, 0, %0, c5, c0, 0"
+    asm volatile ("mrc p15, 0, %0, c5, c0, 0"
       : "=r" (dfsr_save)
     );
 

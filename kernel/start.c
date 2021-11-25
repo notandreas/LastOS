@@ -7,8 +7,6 @@ void start_kernel(){
 
     init_uart();
 
-    test_kprintf();
-
     for (;;) {
         char in_char = uart_get_c();
 
