@@ -57,7 +57,6 @@ _bsprak:
 
     msr cpsr_cxsf, r0      @ load cpsr again
 
-    @@@@ möglicher bug mit zum ende hin zum usr switchen!!!
     cpsie if
 
     /* Zu c Code springen */
