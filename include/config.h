@@ -17,9 +17,6 @@
  */
 
 /* Include-Pfad bitte gegenfalls anpassen */
-#include <kernel/panic.h>
-#include <lib/kprintf.h>
-#include <stdint.h>
 
 /**
  * Erst ab Aufgabenblatt 2 relevant
