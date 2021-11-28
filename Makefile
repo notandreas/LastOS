@@ -45,10 +45,10 @@
 BIN_LSG = 
 
 # Hier eure source files hinzufügen
-ARCH_SOURCES :=$(wildcard arch/**/*.c)
-LIB_SOURCES :=$(wildcard lib/*.c)
-KERNEL_SOURCES :=$(wildcard kernel/*.c)
-SRC = arch/cpu/entry.S kernel/start.c $(ARCH_SOURCES) $(LIB_SOURCES) $(KERNEL_SOURCES)
+ARCH_SOURCES := $(wildcard arch/**/*.c) $(wildcard arch/**/*.S)
+LIB_SOURCES := $(wildcard lib/*.c)
+KERNEL_SOURCES := $(wildcard kernel/*.c)
+SRC = $(ARCH_SOURCES) $(LIB_SOURCES) $(KERNEL_SOURCES)
 
 # Hier separate user files hinzufügen
 USRC = user/main.c

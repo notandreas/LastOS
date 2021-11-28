@@ -1,4 +1,4 @@
 // This is just a placeholder
 int main() {
-	return 0;
+    return 0;
 }

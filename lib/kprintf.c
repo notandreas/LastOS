@@ -1,7 +1,4 @@
-#include <kernel/panic.h>
-
 #include <lib/kprintf.h>
-#include <arch/bsp/uart.h>
 
 void va_printf(char* fmt_str, va_list arg_ptr) {
 
@@ -95,6 +92,7 @@ void va_printf(char* fmt_str, va_list arg_ptr) {
     }
 }
 
+
 void kprintf(char* fmt_str, ...) {
     va_list arg_ptr;
     va_start(arg_ptr, fmt_str);
@@ -103,6 +101,7 @@ void kprintf(char* fmt_str, ...) {
 
     va_end(arg_ptr);
 }
+
 
 void itoa(int num, int base, bool signed_num, char* nums) {
     // clear String
@@ -138,6 +137,7 @@ void itoa(int num, int base, bool signed_num, char* nums) {
         nums[11]++;
     }
 }
+
 
 void kprintf_int(char* nums, bool hex_prefix, bool field_flag, bool zeros_flag) {
     int n = 0;
