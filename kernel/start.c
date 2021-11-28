@@ -1,7 +1,11 @@
 #include <arch/bsp/interrupt.h>
 #include <arch/bsp/irq.h>
+
 #include <arch/bsp/uart.h>
 #include <lib/kprintf.h>
+
+#include <arch/bsp/regcheck.h>
+
 #include <config.h>
 
 int toggle_irq_dump_print = 0;
@@ -51,6 +55,9 @@ void start_kernel(){
                     toggle_irq_timer_print = 1;
                     sub_programm();
                     toggle_irq_timer_print = 0;
+                    break;
+                case 'c':
+                    register_checker();
                     break;
                 default:
                     break;

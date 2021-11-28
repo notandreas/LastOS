@@ -16,8 +16,6 @@
  * auch gerne selbst verändern.
  */
 
-/* Include-Pfad bitte gegenfalls anpassen */
-
 /**
  * Erst ab Aufgabenblatt 2 relevant
  */
