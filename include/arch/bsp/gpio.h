@@ -1,6 +1,10 @@
 #ifndef GPIO_H
 #define GPIO_H
 
+#include <stdint.h>
+
+#include <kernel/panic.h>
+
 /**
  * Defines all GPIO functions for the FSELn of the GPFSELm.
 */

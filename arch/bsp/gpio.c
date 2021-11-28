@@ -1,7 +1,3 @@
-#include <stdint.h>
-
-#include <kernel/panic.h>
-
 #include <arch/bsp/gpio.h>
 
 #define GPIO_BASE (0x7E200000 - 0x3F000000)

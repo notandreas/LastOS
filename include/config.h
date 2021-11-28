@@ -25,7 +25,7 @@ static inline void test_kprintf(void) {
 	 * Hier Test Funktion für kprintf schreiben und
 	 * nach dem vollständigen initialisieren aufrufen
 	 */
-	kprintf("kprintf_test\n");
+	/*kprintf("kprintf_test\n");
 
 	kprintf("\n");
 	kprintf("Char: %c\n", 65);
@@ -50,7 +50,7 @@ static inline void test_kprintf(void) {
 	kprintf("Test %%08i: %08i\n", -12345);
 	kprintf("Test %%08u: %08u\n", 123);
 	kprintf("Test %%08x: %08x\n", 255);
-	kprintf("\n🦀 RUST > C > C++ 🦀\n\n");
+	kprintf("\n🦀 RUST > C > C++ 🦀\n\n");*/
 }
 
 /**
@@ -60,9 +60,13 @@ static inline void test_kprintf(void) {
 #ifdef __QEMU__
 /* Werte zum testen unter QEMU */
 #define BUSY_WAIT_COUNTER 3000000
+#define INPUT_WAIT_COUNTER ((unsigned int) 3000000*3000000)
+#define WORK_COUNTER 67
 #else
 /* Werte zum testen auf der Hardware */
 #define BUSY_WAIT_COUNTER 30000
+#define INPUT_WAIT_COUNTER 30000*30000
+#define PRINT_COUNTER 7
 #endif // __QEMU__
 
 // Wir testen nur mit Werten die durch 2^n darstellbar sind

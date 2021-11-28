@@ -1,90 +1,57 @@
 .macro store_all
-    stmfd sp!, {r0-r12, sp, lr, pc}
-    mov r0, sp
-
-    mrs r1, spsr
-    str r1, [sp, #-4]
-    mrs r1, cpsr
-    str r1, [sp, #-8]
-    sub sp, #8
+    stmfd sp!, {r0-r12, pc}
     mov r1, sp
+    sub r1, r1, #56
 .endm
 
-.macro load_all
-    add sp, sp, #56
-    add sp, sp, #8
-    ldmfd sp!, {r0-r12}
-    ldr lr, [sp, #4]
+.macro load_all r_lr
     add sp, sp, #12
+    add sp, sp, #(12 * \r_lr)
+    ldr lr, [sp, #4]
+    add sp, sp, #(12 * (5-\r_lr))
+    ldmfd sp!, {r0-r12}
+    add sp, sp, #4
 .endm
 
 .macro store_usr
+    mrs r2, sp_usr
     mrs r3, lr_usr
-    str r3, [sp, #-4]
-    sub sp, sp, #4
-    mrs r3, sp_usr
-    str r3, [sp, #-4]
-    sub sp, sp, #4
+    stmfd sp!, {r2-r3}
 .endm
 
 .macro store_und
-    mrs r3, spsr_und
-    str r3, [sp, #-4]
-    sub sp, sp, #4
+    mrs r2, sp_und
     mrs r3, lr_und
-    str r3, [sp, #-4]
-    sub sp, sp, #4
-    mrs r3, sp_und
-    str r3, [sp, #-4]
-    sub sp, sp, #4
+    mrs r4, spsr_und
+    stmfd sp!, {r2-r4}
 .endm
 
 .macro store_svc
-    mrs r3, spsr_svc
-    str r3, [sp, #-4]
-    sub sp, sp, #4
+    mrs r2, sp_svc
     mrs r3, lr_svc
-    str r3, [sp, #-4]
-    sub sp, sp, #4
-    mrs r3, sp_svc
-    str r3, [sp, #-4]
-    sub sp, sp, #4
+    mrs r4, spsr_svc
+    stmfd sp!, {r2-r4}
 .endm
 
 .macro store_abt
-    mrs r3, spsr_abt
-    str r3, [sp, #-4]
-    sub sp, sp, #4
+    mrs r2, sp_abt
     mrs r3, lr_abt
-    str r3, [sp, #-4]
-    sub sp, sp, #4
-    mrs r3, sp_abt
-    str r3, [sp, #-4]
-    sub sp, sp, #4
+    mrs r4, spsr_abt
+    stmfd sp!, {r2-r4}
 .endm
 
 .macro store_irq
-    mrs r3, spsr_irq
-    str r3, [sp, #-4]
-    sub sp, sp, #4
+    mrs r2, sp_irq
     mrs r3, lr_irq
-    str r3, [sp, #-4]
-    sub sp, sp, #4
-    mrs r3, sp_irq
-    str r3, [sp, #-4]
-    sub sp, sp, #4
+    mrs r4, spsr_irq
+    stmfd sp!, {r2-r4}
 .endm
 
 .macro store_fiq
-    mrs r3, spsr_fiq
-    str r3, [sp, #-4]
-    sub sp, sp, #4
+    mrs r2, sp_fiq
     mrs r3, lr_fiq
-    str r3, [sp, #-4]
-    sub sp, sp, #4
-    mrs r3, sp_fiq
-    str r3, [sp, #-4]
-    sub sp, sp, #4
+    mrs r4, spsr_fiq
+    stmfd sp!, {r2-r4}
 .endm
 
 .global _ivt
@@ -104,13 +71,19 @@ reset:
 
 undefined_instruction:
     store_all
+    mov r2, lr
+    mrs r3, spsr
+    stmfd sp!, {r1-r3}
     store_irq
     store_fiq
     store_abt
     store_svc
     store_usr
+    mrs r0, cpsr
+    stmfd sp!, {r0}
+    mov r0, sp
     bl undefined_instruction_interrupt
-    load_all
+    load_all 4
     subs pc, lr, #0
 
 software_interrupt:
@@ -119,10 +92,15 @@ software_interrupt:
     store_irq
     store_fiq
     store_abt
+    mov r2, lr
+    mrs r3, spsr
+    stmfd sp!, {r1-r3}
     store_usr
-    mov r2, sp
+    mrs r0, cpsr
+    stmfd sp!, {r0}
+    mov r0, sp
     bl software_interrupt_interrupt
-    load_all
+    load_all 0
     subs pc, lr, #0
 
 prefetch_abort:
@@ -130,11 +108,16 @@ prefetch_abort:
     store_und
     store_irq
     store_fiq
+    mov r2, lr
+    mrs r3, spsr
+    stmfd sp!, {r1-r3}
     store_svc
     store_usr
-    mov r2, sp
+    mrs r0, cpsr
+    stmfd sp!, {r0}
+    mov r0, sp
     bl prefetch_abort_interrupt
-    load_all
+    load_all 1
     subs pc, lr, #0
 
 data_abort:
@@ -142,33 +125,50 @@ data_abort:
     store_und
     store_irq
     store_fiq
+    mov r2, lr
+    mrs r3, spsr
+    stmfd sp!, {r1-r3}
     store_svc
     store_usr
-    mov r2, sp
+    mrs r0, cpsr
+    stmfd sp!, {r0}
+    mov r0, sp
     bl data_abort_interrupt
-    load_all
+    load_all 1
     subs pc, lr, #4
 
 irq:
     store_all
     store_und
+    mov r2, lr
+    mrs r3, spsr
+    stmfd sp!, {r1-r3}
     store_fiq
     store_abt
     store_svc
     store_usr
+    mrs r0, cpsr
+    stmfd sp!, {r0}
+    mov r0, sp
     bl irq_interrupt
-    load_all
+    load_all 3
     subs pc, lr, #4
 
 fiq:
     store_all
     store_und
     store_irq
+    mov r2, lr
+    mrs r3, spsr
+    stmfd sp!, {r1-r3}
     store_abt
     store_svc
     store_usr
+    mrs r0, cpsr
+    stmfd sp!, {r0}
+    mov r0, sp
     bl fiq_interrupt
-    load_all
+    load_all 2
     subs pc, lr, #4
 
 not_used:

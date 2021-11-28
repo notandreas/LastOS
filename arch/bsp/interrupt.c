@@ -1,29 +1,26 @@
-#include <stdint.h>
-
-#include <kernel/panic.h>
-
 #include <arch/bsp/interrupt.h>
-#include <lib/kprintf.h>
 
-void undefined_instruction_interrupt(uint32_t reg[16], uint32_t psr[2], uint32_t mod_reg[14]) {
+void undefined_instruction_interrupt(arm_registers *reg) {
     kprintf("\n###########################################################################\n");
-    kprintf("Undefined Instruction an Adresse: 0x%08x\n", (unsigned int) reg[14] - 4);
+    kprintf("Undefined Instruction an Adresse: 0x%08x\n", (unsigned int) (reg->und_lr) - 4);
 
-    print_registers(reg);
-    print_pcr(psr);
+    print_registers(reg, reg->und_sp, reg->usr_lr);
+    print_pcr(reg->cpsr, reg->und_spsr);
+    print_mode_register(reg);
 }
 
-void software_interrupt_interrupt(uint32_t reg[16], uint32_t psr[2], uint32_t mod_reg[14]) {
+void software_interrupt_interrupt(arm_registers *reg) {
     kprintf("\n###########################################################################\n");
-    kprintf("Software Interrupt an Adresse: 0x%08x\n", (unsigned int) reg[14] - 4);
+    kprintf("Software Interrupt an Adresse: 0x%08x\n", (unsigned int) (reg->svc_lr) - 4);
 
-    print_registers(reg);
-    print_pcr(psr);
+    print_registers(reg, reg->svc_sp, reg->svc_lr);
+    print_pcr(reg->cpsr, reg->svc_spsr);
+    print_mode_register(reg);
 }
 
-void prefetch_abort_interrupt(uint32_t reg[16], uint32_t psr[2], uint32_t mod_reg[14]){
+void prefetch_abort_interrupt(arm_registers *reg){
     kprintf("\n###########################################################################\n");
-    kprintf("Prefetch Abort an Adresse: 0x%08x\n", (unsigned int) reg[14] - 4);
+    kprintf("Prefetch Abort an Adresse: 0x%08x\n", (unsigned int) (reg->abt_lr) - 4);
 
     uint32_t ifar_save;
     asm volatile ("mrc p15, 0, %0, c6, c0, 2"
@@ -40,13 +37,14 @@ void prefetch_abort_interrupt(uint32_t reg[16], uint32_t psr[2], uint32_t mod_re
     print_ifsr(ifsr_save);
     kprintf("\n");
 
-    print_registers(reg);
-    print_pcr(psr);
+    print_registers(reg, reg->abt_sp, reg->abt_lr);
+    print_pcr(reg->cpsr, reg->abt_spsr);
+    print_mode_register(reg);
 }
 
-void data_abort_interrupt(uint32_t reg[16], uint32_t psr[2], uint32_t mod_reg[14]) {
+void data_abort_interrupt(arm_registers *reg) {
     kprintf("\n###########################################################################\n");
-    kprintf("Data Abort an Adresse: 0x%08x\n", (unsigned int) reg[14] - 8);
+    kprintf("Data Abort an Adresse: 0x%08x\n", (unsigned int) (reg->abt_lr) - 8);
 
     uint32_t dfar_save;
     asm volatile ("mrc p15, 0, %0, c6, c0, 0"
@@ -63,69 +61,83 @@ void data_abort_interrupt(uint32_t reg[16], uint32_t psr[2], uint32_t mod_reg[14
     print_dfsr(dfsr_save);
     kprintf("\n");
 
-    print_registers(reg);
-    print_pcr(psr);
+    print_registers(reg, reg->abt_sp, reg->abt_lr);
+    print_pcr(reg->cpsr, reg->abt_spsr);
+    print_mode_register(reg);
 }
 
-void irq_interrupt(uint32_t reg[16], uint32_t psr[2], uint32_t mod_reg[14]) {
-    /*
-        kprintf("\n###########################################################################\n");
-        kprintf("IRQ Interrupt an Adresse: 0x%08x\n", (unsigned int) reg[14] - 8);
+void irq_interrupt(arm_registers *reg) {
+    
+    if (get_pending_1() & 1) {
+        reset_timer();
 
-        print_registers(reg);
-        print_pcr(psr);
-    */
+        if (toggle_irq_timer_print)
+            kprintf("!\n");
+    
+        if (toggle_irq_dump_print == 1) {
+            kprintf("\n###########################################################################\n");
+            kprintf("IRQ Interrupt an Adresse: 0x%08x\n", (unsigned int) (reg->irq_lr) - 8);
+
+            print_registers(reg, reg->irq_sp, reg->irq_lr);
+            print_pcr(reg->cpsr, reg->irq_spsr);
+            print_mode_register(reg);
+        }
+    }
+    if (get_pending_2() & (1 << 25)) {
+        uart_add_to_buffer(uart_get_c());
+    }
 }
 
-void fiq_interrupt(uint32_t reg[16], uint32_t psr[2], uint32_t mod_reg[14]) {
+void fiq_interrupt(arm_registers *reg) {
     kprintf("\n###########################################################################\n");
-    kprintf("FIQ Interrupt an Adresse: 0x%08x\n", (unsigned int) reg[14] - 8);
+    kprintf("FIQ Interrupt an Adresse: 0x%08x\n", (unsigned int) (reg->fiq_lr) - 8);
 
-    print_registers(reg);
-    print_pcr(psr);
+    print_registers(reg, reg->fiq_sp, reg->irq_lr);
+    print_pcr(reg->cpsr, reg->fiq_spsr);
+    print_mode_register(reg);
 }
 
-void print_registers(uint32_t reg[16]) {
+void print_registers(arm_registers *reg, uint32_t sp, uint32_t lr) {
     kprintf("\n>>> Registerschnappschuss (aktueller Modus) <<<\n");
-    kprintf("R0: 0x%08x   R8:  0x%08x\n", (unsigned int) reg[0], (unsigned int) reg[8]);
-    kprintf("R1: 0x%08x   R9:  0x%08x\n", (unsigned int) reg[1], (unsigned int) reg[9]);
-    kprintf("R2: 0x%08x   R10: 0x%08x\n", (unsigned int) reg[2], (unsigned int) reg[10]);
-    kprintf("R3: 0x%08x   R11: 0x%08x\n", (unsigned int) reg[3], (unsigned int) reg[11]);
-    kprintf("R4: 0x%08x   R12: 0x%08x\n", (unsigned int) reg[4], (unsigned int) reg[12]);
-    kprintf("R5: 0x%08x   SP:  0x%08x\n", (unsigned int) reg[5], (unsigned int) reg[13]);
-    kprintf("R6: 0x%08x   LR:  0x%08x\n", (unsigned int) reg[6], (unsigned int) reg[14]);
-    kprintf("R7: 0x%08x   PC:  0x%08x\n", (unsigned int) reg[7], (unsigned int) reg[15]);
+    kprintf("R0: 0x%08x   R8:  0x%08x\n", (unsigned int) (reg->r0), (unsigned int) (reg->r8));
+    kprintf("R1: 0x%08x   R9:  0x%08x\n", (unsigned int) (reg->r1), (unsigned int) (reg->r9));
+    kprintf("R2: 0x%08x   R10: 0x%08x\n", (unsigned int) (reg->r2), (unsigned int) (reg->r10));
+    kprintf("R3: 0x%08x   R11: 0x%08x\n", (unsigned int) (reg->r3), (unsigned int) (reg->r11));
+    kprintf("R4: 0x%08x   R12: 0x%08x\n", (unsigned int) (reg->r4), (unsigned int) (reg->r12));
+    kprintf("R5: 0x%08x   SP:  0x%08x\n", (unsigned int) (reg->r5), (unsigned int) (sp));
+    kprintf("R6: 0x%08x   LR:  0x%08x\n", (unsigned int) (reg->r6), (unsigned int) (lr));
+    kprintf("R7: 0x%08x   PC:  0x%08x\n", (unsigned int) (reg->r7), (unsigned int) (reg->pc));
 }
 
-void print_pcr(uint32_t psr[2]) {
+void print_pcr(uint32_t cpsr, uint32_t spsr) {
     kprintf("\n>>> Aktuelle Statusregister (SPSR des aktuellen Modus) <<<\n");
     kprintf("CPSR: ");
-    print_status(psr[0]);
+    print_status(cpsr);
     kprintf("\n");
     kprintf("SPSR: ");
-    print_status(psr[1]);
+    print_status(spsr);
     kprintf("\n");
 }
 
-void print_mode_register() {
-    /*kprintf("\n>>> Aktuelle modusspezifische Register <<<\n");
+void print_mode_register(arm_registers *reg) {
+    kprintf("\n>>> Aktuelle modusspezifische Register <<<\n");
     kprintf("             LR         SP         SPSR\n");
-    kprintf("User/System: 0x%08x 0x%08x \n", usr[1], usr[0]);
-    kprintf("Supervisor:  0x%08x 0x%08x ", svc[1], svc[0]);
-    status_string(svc[4]);
+    kprintf("User/System: 0x%08x 0x%08x \n", (unsigned int) reg->usr_lr, (unsigned int) reg->usr_sp);
+    kprintf("Supervisor:  0x%08x 0x%08x ", (unsigned int) reg->usr_lr, (unsigned int) reg->svc_sp);
+    print_status(reg->svc_spsr);
     kprintf("\n");
-    kprintf("Abort:       0x%08x 0x%08x ", reg[14], reg[13]);
-    status_string(psr[1]);
+    kprintf("Abort:       0x%08x 0x%08x ", (unsigned int) reg->abt_lr, (unsigned int) reg->abt_sp);
+    print_status(reg->abt_spsr);
     kprintf("\n");
-    kprintf("FIQ:         0x%08x 0x%08x ", mod_reg[6], mod_reg[5]);
-    status_string(mod_reg[7]);
+    kprintf("FIQ:         0x%08x 0x%08x ", (unsigned int) reg->fiq_lr, (unsigned int) reg->fiq_sp);
+    print_status(reg->fiq_spsr);
     kprintf("\n");
-    kprintf("IRQ:         0x%08x 0x%08x ", mod_reg[9], mod_reg[8]);
-    status_string(mod_reg[10]);
+    kprintf("IRQ:         0x%08x 0x%08x ", (unsigned int) reg->irq_lr, (unsigned int) reg->irq_sp);
+    print_status(reg->irq_spsr);
     kprintf("\n");
-    kprintf("Undefine:    0x%08x 0x%08x ", mod_reg[12], mod_reg[11]);
-    status_string(mod_reg[13]);
-    kprintf("\n");*/
+    kprintf("Undefine:    0x%08x 0x%08x ", (unsigned int) reg->und_lr, (unsigned int) reg->und_sp);
+    print_status(reg->und_spsr);
+    kprintf("\n");
 }
 
 void print_status(unsigned int psr) {
