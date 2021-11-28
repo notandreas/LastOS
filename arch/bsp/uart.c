@@ -39,8 +39,8 @@ enum uart_lcrh {
 enum uart_cr {
     DISABLE_UART = 0x0,                             // Disable UART
     ENABLE_UART = 0x1,                              // Enable UART
-    TXE = 1<< 0x8, 	                                // Transmit enable
-    RXE = 1<< 0x9, 	                                // Receive enable
+    TXE = 1<< 0x8,                                  // Transmit enable
+    RXE = 1<< 0x9,                                  // Receive enable
 };
 
 
