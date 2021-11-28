@@ -34,7 +34,7 @@ typedef struct _gpio_registers {
 
 static volatile gpio * const gpio_registers = (gpio *) GPIO_BASE;
 
-//setting the gpiofuncbit, GPIO func has 6 registers hence using the switchcase here
+
 void gpio_set_pin_func(int pin, gpio_func func) {
     switch (pin) {
         case 0 ... 9:
@@ -61,7 +61,7 @@ void gpio_set_pin_func(int pin, gpio_func func) {
     }
 }
 
-//setting the gpio pull-up/down register here with the pullup/down clock (those two have to be set together)
+
 void gpio_set_up_down(int pin, gpio_up_down up_down) {
     gpio_registers->pud = up_down;
     if (0 <= pin && pin <= 31) {

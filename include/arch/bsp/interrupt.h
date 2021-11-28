@@ -50,20 +50,67 @@ typedef struct _arm_registers {
     uint32_t pc;
 } arm_registers;
 
+/**
+ * @brief Globale variable, to let the irq print a register dump on every tick.
+ * 
+ */
 extern int toggle_irq_dump_print;
 
+/**
+ * @brief Globale variable, to let the irq print a '!\\n' on every tick.
+ * 
+ */
 extern int toggle_irq_timer_print;
 
+
+/**
+ * @brief Print all registers of an arm_registers struct.
+ * 
+ * @param reg Use only r0-r12 and pc.
+ * @param sp The current sp of the mode.
+ * @param lr The current lr of the mode. (return address without subtraction)
+ */
 void print_registers(arm_registers *reg, uint32_t sp, uint32_t lr);
 
+
+/**
+ * @brief Print a two row table with in a format like NZCV E IFT <MODE>.
+ * 
+ * @param cpsr the Current Program Status Register
+ * @param spsr the Saved Program Status Registers
+ */
 void print_pcr(uint32_t cpsr, uint32_t spsr);
 
+
+/**
+ * @brief Print a table of ARM modes, with the current lr, sp and spsr.
+ * 
+ * @param reg A arm_registers Struct that contais all registers.
+ */
 void print_mode_register(arm_registers *reg);
 
+
+/**
+ * @brief Print the cpsr/spsr in a format like NZCV E IFT <MODE>.
+ * 
+ * @param psr The cpsr or the spsr
+ */
 void print_status(unsigned int psr);
 
+
+/**
+ * @brief Print the error of the data_abt, by decoding the dfsr.
+ * 
+ * @param sr The dfsr content to decode
+ */
 void print_dfsr(unsigned int sr);
 
+
+/**
+ * @brief Print the error of the prefetch_abt, by decoding the ifsr
+ * 
+ * @param sr The ifsr content to decode
+ */
 void print_ifsr(unsigned int sr);
 
 #endif

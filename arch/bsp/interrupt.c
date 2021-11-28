@@ -9,6 +9,7 @@ void undefined_instruction_interrupt(arm_registers *reg) {
     print_mode_register(reg);
 }
 
+
 void software_interrupt_interrupt(arm_registers *reg) {
     kprintf("\n###########################################################################\n");
     kprintf("Software Interrupt an Adresse: 0x%08x\n", (unsigned int) (reg->svc_lr) - 4);
@@ -18,15 +19,18 @@ void software_interrupt_interrupt(arm_registers *reg) {
     print_mode_register(reg);
 }
 
+
 void prefetch_abort_interrupt(arm_registers *reg){
     kprintf("\n###########################################################################\n");
     kprintf("Prefetch Abort an Adresse: 0x%08x\n", (unsigned int) (reg->abt_lr) - 4);
 
+    // read the ifar register
     uint32_t ifar_save;
     asm volatile ("mrc p15, 0, %0, c6, c0, 2"
       : "=r" (ifar_save)
     );
 
+    // read the ifsr register
     uint32_t ifsr_save;
     asm volatile ("mrc p15, 0, %0, c5, c0, 1"
       : "=r" (ifsr_save)
@@ -42,15 +46,18 @@ void prefetch_abort_interrupt(arm_registers *reg){
     print_mode_register(reg);
 }
 
+
 void data_abort_interrupt(arm_registers *reg) {
     kprintf("\n###########################################################################\n");
     kprintf("Data Abort an Adresse: 0x%08x\n", (unsigned int) (reg->abt_lr) - 8);
 
+    // read the dfar register
     uint32_t dfar_save;
     asm volatile ("mrc p15, 0, %0, c6, c0, 0"
       : "=r" (dfar_save)
     );
 
+    // read the dfsr register
     uint32_t dfsr_save;
     asm volatile ("mrc p15, 0, %0, c5, c0, 0"
       : "=r" (dfsr_save)
@@ -66,14 +73,18 @@ void data_abort_interrupt(arm_registers *reg) {
     print_mode_register(reg);
 }
 
+
 void irq_interrupt(arm_registers *reg) {
     
+    // check if the irq is a timer interrupt
     if (get_pending_1() & 1) {
-        reset_timer();
+        reset_timer();                  // reset the timer
 
+        // print the '!\\n' if toggled
         if (toggle_irq_timer_print)
             kprintf("!\n");
     
+        // print the register dump if toggled
         if (toggle_irq_dump_print == 1) {
             kprintf("\n###########################################################################\n");
             kprintf("IRQ Interrupt an Adresse: 0x%08x\n", (unsigned int) (reg->irq_lr) - 8);
@@ -83,10 +94,13 @@ void irq_interrupt(arm_registers *reg) {
             print_mode_register(reg);
         }
     }
-    if (get_pending_2() & (1 << 25)) {
+
+    // check if the irq is a uart interrupt
+    else if (get_pending_2() & (1 << 25)) {
         uart_add_to_buffer(uart_get_c());
     }
 }
+
 
 void fiq_interrupt(arm_registers *reg) {
     kprintf("\n###########################################################################\n");
@@ -96,6 +110,7 @@ void fiq_interrupt(arm_registers *reg) {
     print_pcr(reg->cpsr, reg->fiq_spsr);
     print_mode_register(reg);
 }
+
 
 void print_registers(arm_registers *reg, uint32_t sp, uint32_t lr) {
     kprintf("\n>>> Registerschnappschuss (aktueller Modus) <<<\n");
@@ -109,6 +124,7 @@ void print_registers(arm_registers *reg, uint32_t sp, uint32_t lr) {
     kprintf("R7: 0x%08x   PC:  0x%08x\n", (unsigned int) (reg->r7), (unsigned int) (reg->pc));
 }
 
+
 void print_pcr(uint32_t cpsr, uint32_t spsr) {
     kprintf("\n>>> Aktuelle Statusregister (SPSR des aktuellen Modus) <<<\n");
     kprintf("CPSR: ");
@@ -118,6 +134,7 @@ void print_pcr(uint32_t cpsr, uint32_t spsr) {
     print_status(spsr);
     kprintf("\n");
 }
+
 
 void print_mode_register(arm_registers *reg) {
     kprintf("\n>>> Aktuelle modusspezifische Register <<<\n");
@@ -139,6 +156,7 @@ void print_mode_register(arm_registers *reg) {
     print_status(reg->und_spsr);
     kprintf("\n");
 }
+
 
 void print_status(unsigned int psr) {
     unsigned char status = 0b00000000;
@@ -162,6 +180,7 @@ void print_status(unsigned int psr) {
 
     kprintf(" ");
 
+    // Print mode name for the psr (prs arm doc)
     switch (psr & 0x1F) {
         case 0x10:
             kprintf("User        ");
@@ -192,12 +211,15 @@ void print_status(unsigned int psr) {
     kprintf(" (0x%08x)", psr);
 }
 
+
 void print_dfsr(unsigned int sr) {
     unsigned char status = 0;
 
+    // get the important bits (bsprak vl)
     status |= sr & 0b1111;
     status |= (sr & (1 << 10)) >> 6;
 
+    // check for type (bsprak vl)
     switch (status) {
         case 0b00000:
             kprintf("reset value");
@@ -249,12 +271,15 @@ void print_dfsr(unsigned int sr) {
     }
 }
 
+
 void print_ifsr(unsigned int sr) {
     unsigned char status = 0;
 
+    // get the important bits (bsprak vl)
     status |= sr & 0b1111;
     status |= (sr & (1 << 9)) >> 6;
 
+    // check for type (bsprak vl)
     switch (status) {
         case 0b00000:
             kprintf("reset value");

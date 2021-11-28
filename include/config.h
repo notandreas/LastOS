@@ -16,20 +16,16 @@
  * auch gerne selbst verändern.
  */
 
-/**
- * Erst ab Aufgabenblatt 2 relevant
- */
-
 #ifdef __QEMU__
 /* Werte zum testen unter QEMU */
-#define BUSY_WAIT_COUNTER 3000000
-#define INPUT_WAIT_COUNTER ((unsigned int) 3000000*3000000)
-#define WORK_COUNTER 67
+#define BUSY_WAIT_COUNTER 3000000                               // change the busy wait.
+#define INPUT_WAIT_COUNTER ((unsigned int) 3000000*3000000)     // change the input waiting time. (about 5 sec)
+#define WORK_COUNTER 67                                         // chaneg print count.
 #else
 /* Werte zum testen auf der Hardware */
 #define BUSY_WAIT_COUNTER 30000
 #define INPUT_WAIT_COUNTER 30000*30000
-#define PRINT_COUNTER 7
+#define WORK_COUNTER 7
 #endif // __QEMU__
 
 // Wir testen nur mit Werten die durch 2^n darstellbar sind

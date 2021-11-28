@@ -6,8 +6,9 @@
 #include <kernel/panic.h>
 
 /**
- * Defines all GPIO functions for the FSELn of the GPFSELm.
-*/
+ * @brief Defines all GPIO functions for the FSELn of the GPFSELm.
+ * 
+ */
 typedef enum _gpio_func {
     GPIO_FUNC_INPUT = 0x000,
     GPIO_FUNC_OUTPUT = 0x001,
@@ -19,6 +20,11 @@ typedef enum _gpio_func {
     GPIO_FUNC_ALT5 = 0x010,
 } gpio_func;
 
+
+/**
+ * @brief The (pin) mode.
+ * 
+ */
 typedef enum _gpio_up_down {
     GPIO_UD_DISABLE = 0x00,
     GPIO_UD_PULL_DOWN = 0x01,
@@ -26,18 +32,22 @@ typedef enum _gpio_up_down {
     GPIO_UD_RESERVED = 0x11,
 } gpio_up_down;
 
-/**
- * Set the GPIO GPFSELn register for Pin (pin).
- * If (pin) is not existend, this function does nothing.
- * The Pin (pin) range goes from 0 to 53.
-*/
-void gpio_set_pin_func(int pin, gpio_func func);
 
 /**
- * Enable pull-up/down for Pin (pin).
- * GPPUD and GPPUDCLKn are set automatically.
- * The Pin (pin) range goes from 0 to 53.
-*/
+ * @brief Set the GPIO GPFSELn register for Pin (pin).
+ * 
+ * @param pin The Pin range goes from 0 to 53. If is not in range, this function panic.
+ * @param func The function mode of the pin (gpio_func)
+ */
+void gpio_set_pin_func(int pin, gpio_func func);
+
+
+/**
+ * @brief Set a (pin) mode.
+ * 
+ * @param pin The Pin range goes from 0 to 53. If is not in range, this function does nothing.
+ * @param func How the (pin) ist set (gpio_up_down).
+ */
 void gpio_set_up_down(int pin, gpio_up_down func);
 
 #endif
