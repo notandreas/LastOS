@@ -52,7 +52,7 @@ void start_kernel(){
                     asm volatile ("bkpt");                                          // trigger prefetch abt.
                     break;
                 case 'a':
-                    asm volatile ("mov r0, #1\n" "ldr r0, [r0]");                   // trigger data abt.
+                    asm volatile ("ldr r0, [sp, #1]");                              // trigger data abt.
                     break;
                 case 'u':
                     asm volatile ("udf");                                           // trigger undef instr.
