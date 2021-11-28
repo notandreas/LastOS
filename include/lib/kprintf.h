@@ -4,6 +4,10 @@
 #include <stdbool.h>
 #include <stdarg.h>
 
+#include <kernel/panic.h>
+
+#include <arch/bsp/uart.h>
+
 /**
  * Logic to print a string with a formatter.
 */

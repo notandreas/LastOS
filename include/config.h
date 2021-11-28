@@ -20,38 +20,6 @@
 #include <kernel/panic.h>
 #include <lib/kprintf.h>
 #include <stdint.h>
-static inline void test_kprintf(void) {
-	/* Nur für Aufgabenblatt 1
-	 * Hier Test Funktion für kprintf schreiben und
-	 * nach dem vollständigen initialisieren aufrufen
-	 */
-	/*kprintf("kprintf_test\n");
-
-	kprintf("\n");
-	kprintf("Char: %c\n", 65);
-	char* test = "Hello World";
-	kprintf("String: %s\n", test);
-	kprintf("Hex: %x\n", 1334);
-	kprintf("Int MIM: %i\n", (int) -2147483648);
-	kprintf("Int MAX: %i\n", (int) 2147483647);
-	//kprintf("Int MIM: %i\n", INT32_MIN); // -2147483648
-	//kprintf("Int MAX: %i\n", INT32_MAX); // 2147483647
-	kprintf("UInt MIN: %u\n", 0); // 0
-	kprintf("UInt MAX: %u\n", (int) 4294967295);
-	//kprintf("UInt MAX: %u\n", UINT32_MAX); // 4294967295
-	kprintf("Pointer: %p\n", test);
-	kprintf("Percent: %%\n");
-	kprintf("\n");
-	kprintf("Test %%8i: %8i\n", -12345);
-	kprintf("Test %%8u: %8u\n", 123);
-	kprintf("Test %%8x: %8x\n", 255);
-	kprintf("Test %%8p: %8p\n", test);
-	kprintf("\n");
-	kprintf("Test %%08i: %08i\n", -12345);
-	kprintf("Test %%08u: %08u\n", 123);
-	kprintf("Test %%08x: %08x\n", 255);
-	kprintf("\n🦀 RUST > C > C++ 🦀\n\n");*/
-}
 
 /**
  * Erst ab Aufgabenblatt 2 relevant

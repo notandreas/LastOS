@@ -36,13 +36,13 @@ void start_kernel(){
                     asm volatile ("svc #0");
                     break;
                 case 'p':
-                    asm volatile ("bkpt #0");
+                    asm volatile ("bkpt");
                     break;
                 case 'a':
                     asm volatile ("mov r0, #1\n" "ldr r0, [r0]");
                     break;
                 case 'u':
-                    asm volatile ("udf #0");
+                    asm volatile ("udf");
                     break;
                 case 'd':
                     toggle_irq_dump_print = toggle_irq_dump_print ? 0 : 1;

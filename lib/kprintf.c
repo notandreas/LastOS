@@ -1,7 +1,4 @@
-#include <kernel/panic.h>
-
 #include <lib/kprintf.h>
-#include <arch/bsp/uart.h>
 
 void va_printf(char* fmt_str, va_list arg_ptr) {
 
