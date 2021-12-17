@@ -3,6 +3,7 @@
 
 #include <kernel/panic.h>
 
+#include <arch/bsp/interrupt.h>
 #include <lib/kprintf.h>
 #include <config.h>
 

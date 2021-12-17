@@ -1,6 +1,12 @@
 #include <kernel/kthread.h>
 
-static int thread_list[THREAD_COUNT];
+typedef struct _kthread_save {
+    arm_registers save;
+    const void *arg;
+    unsigned int args_s;
+} kthread_save;
+
+static kthread_save thread_list[THREAD_COUNT];
 
 void kthread_start(int thread_id) {
 }
