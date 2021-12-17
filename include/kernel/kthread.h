@@ -1,10 +1,13 @@
 #ifndef KTHREAD_H
 #define KTHREAD_H
 
-extern int thread_list[32];
+#include <kernel/panic.h>
 
-void thread_start();
+#include <lib/kprintf.h>
+#include <config.h>
 
-void thread_create(void (*func)(void*), const void *args, unsigned int args_size);
+void kthread_start(int thread_id);
+
+void kthread_create(void (*func)(void*), const void *args, unsigned int args_size);
 
 #endif

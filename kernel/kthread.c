@@ -1,9 +1,9 @@
 #include <kernel/kthread.h>
 
-void thread_start() {
+static int thread_list[THREAD_COUNT];
 
+void kthread_start(int thread_id) {
 }
 
-void thread_create(void (*func)(void*), const void *args, unsigned int args_size){
-    
+void kthread_create(void (*func)(void*), const void *args, unsigned int args_size){
 }

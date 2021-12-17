@@ -21,6 +21,8 @@
 #define BUSY_WAIT_COUNTER 3000000                               // change the busy wait.
 #define INPUT_WAIT_COUNTER ((unsigned int) 3000000*3000000)     // change the input waiting time. (about 5 sec)
 #define WORK_COUNTER 67                                         // chaneg print count.
+
+#define THREAD_COUNT 32                                         // change the max thread count
 #else
 /* Werte zum testen auf der Hardware */
 #define BUSY_WAIT_COUNTER 30000

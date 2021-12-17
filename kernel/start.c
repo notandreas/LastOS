@@ -1,6 +1,8 @@
 #include <arch/bsp/interrupt.h>
 #include <arch/bsp/irq.h>
 
+#include <kernel/kthread.h>
+
 #include <arch/bsp/uart.h>
 #include <lib/kprintf.h>
 
