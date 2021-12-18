@@ -29,11 +29,17 @@ typedef struct _tcb {
     thread_status t_status;
 } tcb;
 
-static tcb thread_list[THREAD_COUNT];
+static tcb thread_list[THREAD_COUNT] = {0};
+static int thread_exist[THREAD_COUNT] = {0};
 static int tcb_current_thread = -1;
 
 
 void kthread_start(int thread_id) {
+    if (thread_exist[thread_id] == 1) {
+
+    }
+    else
+        panic("Thread with ID %i not exist!", thread_id);
 }
 
 
