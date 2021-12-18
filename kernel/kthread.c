@@ -21,6 +21,13 @@ tcb_list_elem* get_next() {
 
 void kthread_create(void (*func)(void*), const void *args, unsigned int args_size) {
     if (thread_count < THREAD_COUNT) {
+        for (int i = 0; i < THREAD_COUNT; i++) {
+            if (thread_list[i].in_use != 0)
+                continue;
+
+            thread_list[i].in_use = 1;
+            break;
+        }
         thread_count++;
     }
     else

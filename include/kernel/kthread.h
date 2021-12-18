@@ -37,8 +37,8 @@ typedef struct _tcb {
 } tcb;
 
 typedef struct _tcb_list_elem {
-    struct _tcb_list_elem *prev;
     struct _tcb_list_elem *next;
+    int in_use;
     tcb saved_thread;
 } tcb_list_elem;
 
