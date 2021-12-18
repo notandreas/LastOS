@@ -28,6 +28,8 @@
 #define BUSY_WAIT_COUNTER 30000
 #define INPUT_WAIT_COUNTER 30000*30000
 #define WORK_COUNTER 7
+
+#define THREAD_COUNT 32
 #endif // __QEMU__
 
 // Wir testen nur mit Werten die durch 2^n darstellbar sind

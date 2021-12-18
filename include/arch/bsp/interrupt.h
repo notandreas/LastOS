@@ -5,6 +5,7 @@
 
 #include <kernel/panic.h>
 
+#include <kernel/kthread.h>
 #include <lib/kprintf.h>
 #include <arch/bsp/irq.h>
 #include <arch/bsp/uart.h>
