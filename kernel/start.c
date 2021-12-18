@@ -44,8 +44,6 @@ void start_kernel(){
     init_uart();                                                                    // setup uart.
     setup_uart();                                                                   // setup the uart interrupts.
 
-    kthread_create(0 , 0, 0);
-
     for (;;) {
         if (uart_has_next()) {                                                      // check if ringbuffer contanes input.
             switch (uart_next()) {
