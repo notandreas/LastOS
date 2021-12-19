@@ -38,13 +38,24 @@ void __attribute__((optimize("O0"))) sub_program() {                            
     } while (uart_has_next());                                                      // Run only one time, but if has more chars to print try it.
 }
 
+void test_sub_program() {
+    uint32_t lr_save;
+    asm volatile ("mov %0, lr"
+      : "=r" (lr_save)
+    );
+
+    kprintf("Current LR: %p\n", lr_save); 
+
+    kprintf("Executing TEST PROGRAM!\n");
+}
+
 void start_kernel(){
     setup_timer();                                                                  // setup timer interrupts.
 
     init_uart();                                                                    // setup uart.
     setup_uart();                                                                   // setup the uart interrupts.
 
-    //kthread_create(0, 0, 0);
+    kthread_create(test_sub_program, 0, 0);
 
     for (;;) {
         if (uart_has_next()) {                                                      // check if ringbuffer contanes input.

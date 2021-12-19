@@ -56,15 +56,10 @@ void kthread_store(arm_registers *regs, tcb_list_elem* t_save) {
     t_save->saved_thread.r10 = regs->r10;
     t_save->saved_thread.r11 = regs->r11;
     t_save->saved_thread.r12 = regs->r12;
-/*
-    kprintf("R0: 0x%08x   R8:  0x%08x\n", (unsigned int) (kernel_thread.saved_thread.r0), (unsigned int) (kernel_thread.saved_thread.r8));
-    kprintf("R1: 0x%08x   R9:  0x%08x\n", (unsigned int) (kernel_thread.saved_thread.r1), (unsigned int) (kernel_thread.saved_thread.r9));
-    kprintf("R2: 0x%08x   R10: 0x%08x\n", (unsigned int) (kernel_thread.saved_thread.r2), (unsigned int) (kernel_thread.saved_thread.r10));
-    kprintf("R3: 0x%08x   R11: 0x%08x\n", (unsigned int) (kernel_thread.saved_thread.r3), (unsigned int) (kernel_thread.saved_thread.r11));
-    kprintf("R4: 0x%08x   R12: 0x%08x\n", (unsigned int) (kernel_thread.saved_thread.r4), (unsigned int) (kernel_thread.saved_thread.r12));
-    kprintf("R5: 0x%08x   \n", (unsigned int) (kernel_thread.saved_thread.r5));
-    kprintf("R6: 0x%08x   \n", (unsigned int) (kernel_thread.saved_thread.r6));
-    kprintf("R7: 0x%08x   \n", (unsigned int) (kernel_thread.saved_thread.r7));*/
+    t_save->saved_thread.sp = regs->usr_sp;
+    t_save->saved_thread.lr = regs->usr_lr;
+    t_save->saved_thread.pc = regs->irq_lr;
+    t_save->saved_thread.cpsr = regs->irq_spsr;
 }
 
 
@@ -82,6 +77,8 @@ void kthread_load(arm_registers *regs, tcb_list_elem* t_save) {
     regs->r10 = t_save->saved_thread.r10;
     regs->r11 = t_save->saved_thread.r11;
     regs->r12 = t_save->saved_thread.r12;
+
+    regs->irq_lr = t_save->saved_thread.pc;
 }
 
 
@@ -99,10 +96,17 @@ void kthread_create(void (*func)(void*), const void *args, unsigned int args_siz
             tmp->next = thread_list + i;
             thread_list[i].in_use = 1;
             thread_list[i].id = i;
+            thread_list[i].saved_thread.pc = (int) func + 4;
+            thread_list[i].saved_thread.lr = (int) kthread_exit + 4;
+            thread_list[i].saved_thread.sp = 0x1337;
             break;
         }
         thread_count++;
     }
     else
         panic("Max thread count reached! %i/%i\n", thread_count, THREAD_COUNT);
+}
+
+void kthread_exit() {
+    kprintf("EXIT %i\n", tcb_current);
 }

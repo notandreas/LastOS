@@ -151,6 +151,10 @@ irq:
     stmfd sp!, {r0}
     mov r0, sp
     bl irq_interrupt
+    ldr r0, [sp, #4]
+    msr sp_usr, r0
+    ldr r0, [sp, #8]
+    msr lr_usr, r0
     load_all 3
     subs pc, lr, #4
 

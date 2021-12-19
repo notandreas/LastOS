@@ -56,4 +56,6 @@ void kthread_load(arm_registers *regs, tcb_list_elem* t_save);
 
 void kthread_create(void (*func)(void*), const void *args, unsigned int args_size);
 
+void kthread_exit();
+
 #endif
