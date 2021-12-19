@@ -23,16 +23,65 @@ tcb_list_elem* get_next() {
 }
 
 
-void kthread_swap() {
+void kthread_swap(arm_registers *regs) {
     if (tcb_current == -1 && kernel_thread.next != 0) {
+        kthread_store(regs, &kernel_thread);
         tcb_current = kernel_thread.next->id;
+        kthread_load(regs, (thread_list + tcb_current));
     }
     else if (thread_list[tcb_current].next != 0) {
+        kthread_store(regs, (thread_list + tcb_current));
         tcb_current = thread_list[tcb_current].next->id;
+        kthread_load(regs, (thread_list + tcb_current));
     }
     else if (thread_list[tcb_current].next == 0) {
+        kthread_store(regs, (thread_list + tcb_current));
         tcb_current = -1;
+        kthread_load(regs, &kernel_thread);
     }
+}
+
+
+void kthread_store(arm_registers *regs, tcb_list_elem* t_save) {
+    t_save->saved_thread.r0 = regs->r0;
+    t_save->saved_thread.r1 = regs->r1;
+    t_save->saved_thread.r2 = regs->r2;
+    t_save->saved_thread.r3 = regs->r3;
+    t_save->saved_thread.r4 = regs->r4;
+    t_save->saved_thread.r5 = regs->r5;
+    t_save->saved_thread.r6 = regs->r6;
+    t_save->saved_thread.r7 = regs->r7;
+    t_save->saved_thread.r8 = regs->r8;
+    t_save->saved_thread.r9 = regs->r9;
+    t_save->saved_thread.r10 = regs->r10;
+    t_save->saved_thread.r11 = regs->r11;
+    t_save->saved_thread.r12 = regs->r12;
+/*
+    kprintf("R0: 0x%08x   R8:  0x%08x\n", (unsigned int) (kernel_thread.saved_thread.r0), (unsigned int) (kernel_thread.saved_thread.r8));
+    kprintf("R1: 0x%08x   R9:  0x%08x\n", (unsigned int) (kernel_thread.saved_thread.r1), (unsigned int) (kernel_thread.saved_thread.r9));
+    kprintf("R2: 0x%08x   R10: 0x%08x\n", (unsigned int) (kernel_thread.saved_thread.r2), (unsigned int) (kernel_thread.saved_thread.r10));
+    kprintf("R3: 0x%08x   R11: 0x%08x\n", (unsigned int) (kernel_thread.saved_thread.r3), (unsigned int) (kernel_thread.saved_thread.r11));
+    kprintf("R4: 0x%08x   R12: 0x%08x\n", (unsigned int) (kernel_thread.saved_thread.r4), (unsigned int) (kernel_thread.saved_thread.r12));
+    kprintf("R5: 0x%08x   \n", (unsigned int) (kernel_thread.saved_thread.r5));
+    kprintf("R6: 0x%08x   \n", (unsigned int) (kernel_thread.saved_thread.r6));
+    kprintf("R7: 0x%08x   \n", (unsigned int) (kernel_thread.saved_thread.r7));*/
+}
+
+
+void kthread_load(arm_registers *regs, tcb_list_elem* t_save) {
+    regs->r0 = t_save->saved_thread.r0;
+    regs->r1 = t_save->saved_thread.r1;
+    regs->r2 = t_save->saved_thread.r2;
+    regs->r3 = t_save->saved_thread.r3;
+    regs->r4 = t_save->saved_thread.r4;
+    regs->r5 = t_save->saved_thread.r5;
+    regs->r6 = t_save->saved_thread.r6;
+    regs->r7 = t_save->saved_thread.r7;
+    regs->r8 = t_save->saved_thread.r8;
+    regs->r9 = t_save->saved_thread.r9;
+    regs->r10 = t_save->saved_thread.r10;
+    regs->r11 = t_save->saved_thread.r11;
+    regs->r12 = t_save->saved_thread.r12;
 }
 
 
@@ -42,7 +91,7 @@ void kthread_create(void (*func)(void*), const void *args, unsigned int args_siz
             if (thread_list[i].in_use != 0)
                 continue;
 
-            tcb_list_elem *tmp = &kernel_thread.next;
+            tcb_list_elem *tmp = &kernel_thread;
             while (tmp->next != 0) {
                 tmp = tmp->next;
             }

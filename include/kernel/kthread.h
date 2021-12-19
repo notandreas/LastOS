@@ -48,7 +48,11 @@ int get_current_thread();
 
 tcb_list_elem* get_next();
 
-void kthread_swap();
+void kthread_swap(arm_registers *regs);
+
+void kthread_store(arm_registers *regs, tcb_list_elem* t_save);
+
+void kthread_load(arm_registers *regs, tcb_list_elem* t_save);
 
 void kthread_create(void (*func)(void*), const void *args, unsigned int args_size);
 

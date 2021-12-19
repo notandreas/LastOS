@@ -1,4 +1,5 @@
 #include <arch/bsp/interrupt.h>
+#include <kernel/kthread.h>
 
 void undefined_instruction_interrupt(arm_registers *reg) {
     kprintf("\n###########################################################################\n");
@@ -81,7 +82,7 @@ void irq_interrupt(arm_registers *reg) {
         reset_timer();                  // reset the timer
 
         if (get_next() != 0) {
-            kthread_swap();
+            kthread_swap(reg);
             kprintf("switch %i\n", get_current_thread());
         }
 
