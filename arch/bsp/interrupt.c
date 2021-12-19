@@ -81,10 +81,8 @@ void irq_interrupt(arm_registers *reg) {
         reset_timer();                  // reset the timer
 
         if (get_next() != 0) {
-            kprintf("switch\n");
-        }
-        else {
-            kprintf("No Thread to switch\n");
+            kthread_swap();
+            kprintf("switch %i\n", get_current_thread());
         }
 
         // print the '!\\n' if toggled

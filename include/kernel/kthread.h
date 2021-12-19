@@ -39,6 +39,7 @@ typedef struct _tcb {
 typedef struct _tcb_list_elem {
     struct _tcb_list_elem *next;
     int in_use;
+    int id;
     tcb saved_thread;
 } tcb_list_elem;
 
@@ -46,6 +47,8 @@ typedef struct _tcb_list_elem {
 int get_current_thread();
 
 tcb_list_elem* get_next();
+
+void kthread_swap();
 
 void kthread_create(void (*func)(void*), const void *args, unsigned int args_size);
 
